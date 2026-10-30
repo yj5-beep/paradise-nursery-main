@@ -1,7 +1,37 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { cartActions } from '../store/CartSlice';
 import './ProductList.css';
+
+export function Navbar() {
+  const cartItems = useSelector(state => state.cart.items);
+
+  const cartQuantity = cartItems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
+
+  return (
+    <nav className="navbar">
+      <Link to="/" className="navbar-brand">
+        Paradise Nursery
+      </Link>
+
+      <div className="navbar-links">
+        <Link to="/">Home</Link>
+        <Link to="/products">Plants</Link>
+
+        <Link to="/cart" className="cart-link">
+          🛒 Cart
+          <span className="cart-count">
+            {cartQuantity}
+          </span>
+        </Link>
+      </div>
+    </nav>
+  );
+}
 
 export default function ProductList() {
   const dispatch = useDispatch();
@@ -56,8 +86,11 @@ export default function ProductList() {
   const isItemAdded = (productId) =>
     addedItems.has(productId) || cartItems.some(item => item.id === productId);
 
-  return (
-    <div className="product-list-page">
+return (
+    <>
+      <Navbar />
+
+      <div className="product-list-page">
       <div className="products-header">
         <span className="products-eyebrow">Botanical Collection</span>
         <h1 className="page-title">Our Plants Collection</h1>
@@ -99,5 +132,6 @@ export default function ProductList() {
         </section>
       ))}
     </div>
+  </>
   );
 }
